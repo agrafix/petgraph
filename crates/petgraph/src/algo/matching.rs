@@ -383,6 +383,13 @@ where
     // algorithm.
     let (mut mate, mut n_edges) = greedy_matching_inner(&graph);
 
+    // Every matching has at most floor(node_bound / 2) edges. The bound
+    // remains valid when some node indices are vacant, and checking it
+    // avoids allocating the augmenting-path state when it is attained.
+    if n_edges == graph.node_bound() / 2 {
+        return Matching::new(graph, mate, n_edges);
+    }
+
     // Gabow's algorithm uses a dummy node in the mate array.
     mate.push(None);
     let len = graph.node_bound() + 1;

@@ -67,6 +67,20 @@ fn maximum_matching_full(bench: &mut Bencher) {
 }
 
 #[bench]
+fn maximum_matching_path(bench: &mut Bencher) {
+    let g = UnGraph::<(), ()>::from_edges((1..1_000u32).map(|i| (i - 1, i)));
+    assert_eq!(greedy_matching(&g).len(), 500);
+    bench.iter(|| maximum_matching(&g));
+}
+
+#[bench]
+fn maximum_matching_disjoint_pairs(bench: &mut Bencher) {
+    let g = UnGraph::<(), ()>::from_edges((1..1_000u32).step_by(2).map(|i| (i - 1, i)));
+    assert_eq!(greedy_matching(&g).len(), 500);
+    bench.iter(|| maximum_matching(&g));
+}
+
+#[bench]
 fn maximum_matching_bigger(bench: &mut Bencher) {
     let g = ungraph().bigger();
     bench.iter(|| maximum_matching(&g));
